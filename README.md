@@ -1,7 +1,5 @@
-# clouddo-view
-> clouddo的前端系统(基于springcloud的管理系统) [https://gitee.com/lcg0124/clouddo](https://gitee.com/lcg0124/clouddo)
-
-## 介绍
+# paper_springcloud_vuefont
+> papermanage_springcloud的前端部分(基于springcloud的论文管理系统) [https://github.com/akaigin/papermanage_springcloud](https://github.com/akaigin/papermanage_springcloud)
 
 
 ### 说明
@@ -40,42 +38,4 @@
 * vue-router：官方的路由组件，配合vue.js创建单页应用（SPA）非常简单。
 * axios: 基于 Promise 的 HTTP 请求客户端，可同时在浏览器和 node.js 中使用。
 
-## 项目编译和运行
-
-``` bash
-第一步： 先安装node v8.2.1环境，可以用nvm安装，支持多版本切换
-
-
-第二步：下载项目
-可以直接在git上下载项目源码。
-或者通过git命令下载
-#git命令下载
-git clone 
-假定项目已经下载下来了。
-
-第三步：启动服务端
-https://gitee.com/lcg0124/clouddo.git
-  
-第四步：启动前端
-（1）新开一个命令行窗口
-（2）定位到项目目录并安装依赖
-  > cd 你自己的位置/clouddo-view
-  > npm install
-（3）依赖安装成功后执行启动命令
-  > npm run dev
-  # 显示如下内容说明本地启动成功
-  # DONE Compiled successfully in 7515ms
-  # Listening at http://localhost:8081
-   
-   
-#正式环境编译命令
-# build for production with minification
-npm run build
-```
-
-### 
-系统截图
-
-
-![输入图片说明](https://gitee.com/uploads/images/2018/0525/155648_1ce5d9b0_1204498.png "屏幕截图.png")
 
