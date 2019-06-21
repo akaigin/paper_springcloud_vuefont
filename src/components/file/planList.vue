@@ -82,9 +82,9 @@
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="相关文件" prop="uploadFile">
-            <el-upload :before-upload="beforeUpload" action="http://localhost:8002/api-cms/file/upload" :data="uploadData" :headers="uploadHeaders"
+            <el-upload :before-upload="beforeUpload" :action="uploadUrl" :data="uploadData" :headers="uploadHeaders"
                        :on-success="onSuccess">
-              <el-button type="primary">文件编辑</el-button>
+              <el-button type="primary">上传</el-button>
             </el-upload>
           </el-form-item>
         </el-form>
@@ -275,18 +275,18 @@
           if (valid) {
             that.loading = true;
             let params = Object.assign({}, that.editForm);
-            params.roleId = that.roleId
-            API.editUser(params).then(function (result) {
+            params.filePath = that.resPath
+            PLAN_API.editPlan(params).then(function (result) {
                 if (0 === result.code) {
-                  // that.loading = false;
-                  // that.$message;
+                  that.loading = false;
+                  that.$message;
                   that.$message.success({
                     showClose: true,
                     message: "修改成功",
                     duration: 2000
                   });
-                  that.$refs["editForm"].resetFields();
-                  that.editFormVisible = false;
+                  that.$refs["addForm"].resetFields();
+                  that.addFormVisible = false;
                   that.search();
                 } else {
                   that.$message.error({
