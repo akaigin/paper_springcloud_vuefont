@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/clouddo-view.iml" filepath="$PROJECT_DIR$/.idea/clouddo-view.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/paper-view.iml" filepath="$PROJECT_DIR$/.idea/paper-view.iml" />
     </modules>
   </component>
 </project>
