@@ -12,5 +12,8 @@ export default {
   },
   upload: file=>{
     return API.POST('/api-cms/file/upload', file)
+  },
+  download: params=>{
+    return API.POST('/api-cms/file/download', params,{responseType: 'blob'})
   }
 }

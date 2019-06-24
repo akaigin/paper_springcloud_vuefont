@@ -47,8 +47,8 @@ let base = process.env.API_ROOT
 
 
 //通用方法
-export const POST = (url, params) => {
-  return axios.post(`${base}${url}`, params).then(res => res.data)
+export const POST = (url, params, config) => {
+  return axios.post(`${base}${url}`, params, config).then(res => res.data)
 }
 
 export const GET = (url, params) => {

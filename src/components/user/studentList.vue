@@ -68,6 +68,9 @@
           <el-form-item label="邮箱" prop="email">
             <el-input type="email" v-model="addForm.email"></el-input>
           </el-form-item>
+          <el-form-item label="电话号码" prop="phone">
+            <el-input type="phone" v-model="editForm.phone"></el-input>
+          </el-form-item>
           <el-form-item label="角色" prop="roleIds">
             <el-checkbox-group v-model="roleIds">
               <el-checkbox v-for="role in roles" :label="role.roleId" :key="role.roleId">{{role.roleName}}
@@ -94,6 +97,9 @@
           </el-form-item>-->
           <el-form-item label="邮箱" prop="email">
             <el-input type="email" v-model="editForm.email"></el-input>
+          </el-form-item>
+          <el-form-item label="电话号码" prop="phone">
+            <el-input type="phone" v-model="editForm.phone"></el-input>
           </el-form-item>
           <el-form-item label="角色" prop="roleIds">
             <el-checkbox-group v-model="roleIds">
@@ -144,6 +150,7 @@
           password: "",
           name: "",
           email: "",
+          phone: "",
           roleIds: []
         },
         //新增相关数据
@@ -161,6 +168,7 @@
           password: "",
           name: "",
           email: "",
+          phone: "",
           roleIds: []
         }
       };

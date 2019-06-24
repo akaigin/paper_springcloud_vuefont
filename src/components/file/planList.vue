@@ -9,16 +9,17 @@
     <el-col :span="24" class="wrap-main">
       <el-form size="small" :inline="true">
         <el-form-item>
-          <el-input></el-input>
+          <el-input v-model="filters.name" placeholder="描述/文件名/作者/创建时间" style="min-width: 240px;"
+                    @keyup.enter.native="handleSearch"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">查询</el-button>
+          <el-button type="primary" @click="handleSearch">查询</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="showAddDialog">上传新的教学安排</el-button>
         </el-form-item>
       </el-form>
-      <el-table :data="fileRows" border size="small">
+      <el-table :data="fileRows" border size="small"><!--
         <el-table-column label="预览">
           <template slot-scope="scope">
             <img :src="scope.row.url" width="70" height="50">
@@ -28,11 +29,15 @@
           <template slot-scope="scope">
             <el-tag v-if="scope.row.type === 1">图片</el-tag>
           </template>
-        </el-table-column>
-        <el-table-column label="路径" prop="url"></el-table-column>
-        <el-table-column label="创建日期" prop="createDate"></el-table-column>
+        </el-table-column>-->
+        <el-table-column label="id" prop="id"></el-table-column>
+        <el-table-column label="描述" prop="description"></el-table-column>
+        <el-table-column label="文件名" prop="fileName"></el-table-column>
+        <el-table-column label="创建日期" prop="createTime"></el-table-column>
+        <el-table-column label="对应角色" prop="roleNames"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
+            <el-button @click="submitDownLoad(scope.row.filePath, scope.row.fileName)" size="mini" type="success">下载</el-button>
             <el-button @click="removeFile(scope.row.id)" size="mini" type="danger">删除</el-button>
           </template>
         </el-table-column>
@@ -51,7 +56,7 @@
             <el-input v-model="addForm.description" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item label="接收角色" prop="roleId">
-            <el-checkbox-group v-model="roleId">
+            <el-checkbox-group v-model="addForm.roleId">
               <el-checkbox v-for="role in roles" :label="role.roleId" :key="role.roleId">{{role.roleName}}
               </el-checkbox>
             </el-checkbox-group>
@@ -106,13 +111,16 @@
     name: "List",
     data() {
       return {
+        filters: {
+          name: ""
+        },
         limit: 10,
         page: 1,
         total: 0,
         roles: [],
-        roleId: [],
         fileRows: [],
         resPath: '',
+        fileName: '',
         uploadUrl: '',
         uploadData: {},
         uploadHeaders: {Authorization: ''},
@@ -143,14 +151,20 @@
       }
     },
     methods: {
+      handleSearch() {
+        this.total = 0;
+        this.page = 1;
+        this.search();
+      },
       search: function (val) {
         let that = this
         let params = {
           limit: that.limit,
-          page: val
+          page: val,
+          name: that.filters.name
         }
         this.page = val
-        API.files(params).then(res => {
+        PLAN_API.findList(params).then(res => {
           if (res.code === 0) {
             that.fileRows = res.page.rows
             that.total = res.page.total
@@ -225,18 +239,106 @@
           console.log(this.result)//图片的base64数据
         }
       },
+      submitDownLoad(filePath,fileName) {
+        let fields=[{
+          name:'filePath',
+          value: filePath
+        },{
+          name:'fileName',
+          value: fileName
+        }];
+        const form = document.createElement('form');
+        form.action = process.env.API_ROOT + '/api-cms/file/download';
+        form.method = 'POST';
+        form.target = 'downloadFrame';
+        for (let i = 0, l = fields.length; i < l; i++) {
+          const field = fields[i];
+          const f = document.createElement('input');
+          f.type = 'hidden';
+          f.name = field.name;
+          f.value = field.value;
+          form.appendChild(f);
+        }
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+        /*return new Promise((resolve, reject) => {
+          let that=this;
+          API.download(params).then(function (result) {
+            if (result) {
+                that.download(result);
+            }
+          }).catch(function (err) {
+            that.$message.error({showClose: true, message: '请求出现异常', duration: 2000});
+          });
+        }).catch(err => {
+          console.log(err);
+          that.$message.error({
+            showClose: true,
+            message: "请求出现异常",
+            duration: 2000
+          });
+          reject(false);
+        })*/
+      },
+      // 下载文件
+      download (data) {
+        if (!data) {
+          return
+        }
+        let url = window.URL.createObjectURL(new Blob([data]))
+        let link = document.createElement('a')
+        link.style.display = 'none'
+        link.href = url
+        link.setAttribute('download', 'excel.xlsx')
+
+        document.body.appendChild(link)
+        link.click()
+      },
       removeFile: function (id) {
         let that = this;
-        return API.remove({id: id}).then(res => {
-          if (res.code === 0) {
-            that.$message.success(res.msg);
-            that.search(this.page);
-          }
-        })
+        this.$confirm("确认删除该记录吗?", "提示", {type: "warning"})
+          .then(() => {
+            that.loading = true;
+            return PLAN_API.removePlan({id: id})
+              .then(
+                function (result) {
+                  that.loading = false;
+                  if (result && parseInt(result.code) === 0) {
+                    that.$message.success({
+                      showClose: true,
+                      message: "删除成功",
+                      duration: 1500
+                    });
+                    that.search();
+                  }
+                }
+              ),
+              function (err) {
+                that.loading = false;
+                that.$message.error({
+                  showClose: true,
+                  message: err.toString(),
+                  duration: 2000
+                });
+              }
+                .catch(function (error) {
+                  that.loading = false;
+                  console.log(error);
+                  that.$message.error({
+                    showClose: true,
+                    message: "请求出现异常",
+                    duration: 2000
+                  });
+                });
+          })
+          .catch(() => {
+          });
       },
       onSuccess: function (res,file) {
         let that = this;
-        that.resPath=res.resPath;
+        that.resPath=res.data.resPath;
+        that.fileName=res.data.fileName;
         this.search(this.page);
       },
       addSubmit: function () {
@@ -246,6 +348,7 @@
             that.loading = true;
             let params = Object.assign({}, this.addForm);
             params.filePath = that.resPath
+            params.fileName = that.fileName;
             PLAN_API.addPlan(params).then(function (result) {
               if (0 === result.code) {
                 that.loading = false;
