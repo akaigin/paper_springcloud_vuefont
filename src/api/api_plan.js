@@ -1,6 +1,6 @@
 /**
  * Created by bootdo.
- * 用户相关api
+ * 教学安排计划相关api
  */
 import * as API from './'
 

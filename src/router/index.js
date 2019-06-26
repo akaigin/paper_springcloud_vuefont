@@ -18,9 +18,14 @@ import FileList from '../components/file/List.vue'
 import PlanList from '../components/file/planList.vue'
 import LogList from '../components/log/List'
 
-import error from '@/components/404.vue'
+import ReportList from '../components/report/reportList'
+import Editor from '../components/article/editorTinymce'
+import CheckList from '../components/report/checkList'
+import error from '../components/404.vue'
+import ArticleList from '../components/article/List.vue'
+import PersonalArticleList from '../components/article/personalList.vue'
 
-
+import ArticleView from '../components/article/ViewArticle.vue'
 // 懒加载方式，当路由被访问的时候才加载对应组件
 const Login = resolve => require(['@/components/Login'], resolve)
 
@@ -127,6 +132,83 @@ let router = new Router({
       iconCls: 'fa fa-group',
       children: [
         {path: '/cms/plan', component: PlanList, name: '教学安排管理', menuShow: true},
+      ]
+    },
+    {
+      path: '/',
+      component: Home,
+      name: '个人报告管理',
+      menuShow: true,
+      leaf: true,
+      iconCls: 'fa fa-group',
+      children: [
+        {path: '/report/personal', component: ReportList, name: '个人报告管理', menuShow: true},
+      ]
+    },
+    {
+      path: '/',
+      component: Home,
+      name: '审核报告',
+      menuShow: true,
+      leaf: true,
+      iconCls: 'fa fa-group',
+      children: [
+        {path: '/report/check', component: CheckList, name: '审核报告', menuShow: true},
+      ]
+    },
+    {
+      path: '/',
+      component: Home,
+      name: '富文本编辑器',
+      menuShow: true,
+      leaf: true,
+      iconCls: 'fa fa-group',
+      children: [
+        {path: '/article/editor', component: Editor, name: '富文本编辑器', menuShow: true},
+      ]
+    },
+    /*{
+      path: '/',
+      component: Home,
+      name: '创作文章',
+      menuShow: true,
+      leaf: true,
+      iconCls: 'fa fa-group',
+      children: [
+        {path: '/article/create', component: ArticleDetail, name: '审核报告', menuShow: true},
+      ]
+    },*/
+    {
+      path: '/',
+      component: Home,
+      name: '文章列表',
+      menuShow: true,
+      leaf: true,
+      iconCls: 'fa fa-group',
+      children: [
+        {path: '/article/list', component: ArticleList, name: '文章列表', menuShow: true},
+      ]
+    },
+    {
+      path: '/',
+      component: Home,
+      name: '个人文章列表',
+      menuShow: true,
+      leaf: true,
+      iconCls: 'fa fa-group',
+      children: [
+        {path: '/article/personList', component: PersonalArticleList, name: '个人文章列表', menuShow: true},
+      ]
+    },
+    {
+      path: '/',
+      component: Home,
+      name: '阅读文章',
+      menuShow: true,
+      leaf: true,
+      iconCls: 'fa fa-group',
+      children: [
+        {path: '/article/view', component: ArticleView, name: '阅读文章', menuShow: true},
       ]
     },
     {

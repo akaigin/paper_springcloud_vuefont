@@ -3,7 +3,7 @@
     <el-col :span="24" class="warp-breadcrum">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }"><b>首页</b></el-breadcrumb-item>
-        <el-breadcrumb-item>教学安排管理</el-breadcrumb-item>
+        <el-breadcrumb-item>个人提交报告管理</el-breadcrumb-item>
       </el-breadcrumb>
     </el-col>
     <el-col :span="24" class="wrap-main">
@@ -16,7 +16,7 @@
           <el-button type="primary" @click="handleSearch">查询</el-button>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="showAddDialog">上传新的教学安排</el-button>
+          <el-button type="primary" @click="showAddDialog">上传新的报告</el-button>
         </el-form-item>
       </el-form>
       <el-table :data="fileRows" border size="small"><!--
@@ -35,6 +35,13 @@
         <el-table-column label="文件名" prop="fileName"></el-table-column>
         <el-table-column label="创建日期" prop="createTime"></el-table-column>
         <el-table-column label="对应角色" prop="roleNames"></el-table-column>
+        <el-table-column label="当前状态" prop="status">
+            <template slot-scope="scope">
+              <el-button type="success" size="mini" v-if="scope.row.status === 1" @click="showGuidance(scope.row.id)">通过</el-button>
+              <el-button type="danger" size="mini" v-else-if="scope.row.status === 2" @click="showGuidance(scope.row.id)">未通过</el-button>
+              <el-button type="warning" size="mini" v-else-if="scope.row.status === 3" >待审核</el-button>
+            </template>
+        </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button @click="submitDownLoad(scope.row.filePath, scope.row.fileName)" size="mini" type="success">下载</el-button>
@@ -105,7 +112,7 @@
 <script>
   import API from '../../api/api_file'
   import ROLE_API from "../../api/api_role";
-  import PLAN_API from "../../api/api_plan"
+  import REPORT_API from "../../api/api_report"
 
   export default {
     name: "List",
@@ -121,6 +128,7 @@
         fileRows: [],
         resPath: '',
         fileName: '',
+        roleNames: '',
         uploadUrl: '',
         uploadData: {},
         uploadHeaders: {Authorization: ''},
@@ -164,7 +172,7 @@
           name: that.filters.name
         }
         this.page = val
-        PLAN_API.findList(params).then(res => {
+        REPORT_API.findList(params).then(res => {
           if (res.code === 0) {
             that.fileRows = res.page.rows
             that.total = res.page.total
@@ -172,9 +180,25 @@
         })
 
       },
+      showGuidance: function(id)　{
+        let that = this;
+        REPORT_API.getGuidance({id: id}).then(res => {
+          if(res.code === 0) {
+            this.$alert(res.guidance, '指导意见', {
+              confirmButtonText: '确定',
+              callback: action => {
+                this.$message({
+                  type: 'info',
+                  message: `action: ${ action }`
+                });
+              }
+            });
+          }
+        })
+      },
       showAddDialog: function () {
         let that = this;
-        this.addFormVisible = true;
+        that.addFormVisible = true;
         that.roleId = []
         ROLE_API.findList('').then(function (result) {
           that.roles = result.rows;
@@ -300,7 +324,7 @@
         this.$confirm("确认删除该记录吗?", "提示", {type: "warning"})
           .then(() => {
             that.loading = true;
-            return PLAN_API.removePlan({id: id})
+            return REPORT_API.remove({id: id})
               .then(
                 function (result) {
                   that.loading = false;
@@ -349,7 +373,7 @@
             let params = Object.assign({}, this.addForm);
             params.filePath = that.resPath
             params.fileName = that.fileName;
-            PLAN_API.addPlan(params).then(function (result) {
+            REPORT_API.save(params).then(function (result) {
               if (0 === result.code) {
                 that.loading = false;
                 that.$message;
@@ -379,7 +403,7 @@
             that.loading = true;
             let params = Object.assign({}, that.editForm);
             params.filePath = that.resPath
-            PLAN_API.editPlan(params).then(function (result) {
+            REPORT_API.update(params).then(function (result) {
                 if (0 === result.code) {
                   that.loading = false;
                   that.$message;

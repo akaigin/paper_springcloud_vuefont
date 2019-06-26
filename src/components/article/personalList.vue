@@ -3,7 +3,7 @@
     <el-col :span="24" class="warp-breadcrum">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }"><b>首页</b></el-breadcrumb-item>
-        <el-breadcrumb-item>教师列表</el-breadcrumb-item>
+        <el-breadcrumb-item>个人文章列表</el-breadcrumb-item>
       </el-breadcrumb>
     </el-col>
 
@@ -12,38 +12,30 @@
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true" :model="filters">
           <el-form-item>
-            <el-input v-model="filters.name" placeholder="用户名/姓名/昵称" style="min-width: 240px;"
-                      @keyup.enter.native="handleSearch"></el-input>
+            <el-input v-model="filters.name" placeholder="题目/标签/创作时间/作者" style="min-width: 240px;"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handleSearch">查询</el-button>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="showAddDialog">添加</el-button>
           </el-form-item>
         </el-form>
       </el-col>
 
       <!--列表-->
-      <el-table :data="users" highlight-current-row v-loading="loading" style="width: 100%;">
+      <el-table :data="articleRows" highlight-current-row @current-change="selectCurrentRow" v-loading="loading" style="width: 100%;">
         <el-table-column type="index" width="60">
         </el-table-column>
-        <el-table-column label="序号" prop="id" width="80">
+        <el-table-column prop="title" label="题目" width="400" sortable>
         </el-table-column>
-        <el-table-column prop="name" label="姓名" width="120" sortable>
+        <el-table-column prop="resume" label="简述" min-width="120" sortable>
         </el-table-column>
-        <el-table-column prop="username" label="用户名" width="120" sortable>
+        <el-table-column prop="createTime" label="创作时间" width="100"  sortable>
         </el-table-column>
-        <el-table-column prop="sex" label="性别" width="100"  sortable>
-        </el-table-column>
-        <el-table-column prop="email" label="邮箱" min-width="160" sortable>
-        </el-table-column>
-        <el-table-column prop="phone" label="电话号码" sortable>
+        <el-table-column prop="createUser" label="作者" width="160" sortable>
         </el-table-column>
         <el-table-column label="操作" width="150">
           <template slot-scope="scope">
-            <el-button size="mini" @click="showEditDialog(scope.$index,scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="removeUser(scope.$index,scope.row)">删除</el-button>
+            <el-button size="mini" @click="toEditor(scope.$index,scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="removeArticle(scope.$index,scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -65,9 +57,9 @@
           <el-form-item label="姓名" prop="name">
             <el-input v-model="addForm.name" auto-complete="off"></el-input>
           </el-form-item>
-         <!-- <el-form-item label="出生日期" prop="birth">
-            <el-date-picker type="date" placeholder="出生日期" v-model="addForm.birth"></el-date-picker>
-          </el-form-item>-->
+          <!-- <el-form-item label="出生日期" prop="birth">
+             <el-date-picker type="date" placeholder="出生日期" v-model="addForm.birth"></el-date-picker>
+           </el-form-item>-->
           <el-form-item label="邮箱" prop="email">
             <el-input type="email" v-model="addForm.email"></el-input>
           </el-form-item>
@@ -124,6 +116,8 @@
 <script>
   import API from "../../api/api_user";
   import ROLE_API from "../../api/api_role";
+  import ARTICLE_API from "../../api/api_article";
+  import 'tinymce/plugins/code';
 
   export default {
     data() {
@@ -131,15 +125,17 @@
         filters: {
           name: ""
         },
-        loading: false,
-        users: [],
+        articleRows: [],
+        articleId: '',
+        resume: '',
+        content: '',
         roles: [],
         roleIds: [],
+        viewOrOperation: '',
         total: 0,
         page: 1,
         limit: 10,
         loading: false,
-        addFormVisible: false,
         editFormVisible: false,
         editFormRules: {
           username: [
@@ -177,6 +173,38 @@
       };
     },
     methods: {
+      decode(str) {
+        return decodeURIComponent(atob(str).split('').map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        }).join(''))
+      },
+      strip: function (html) {
+        let tmp = document.createElement("DIV");
+        tmp.innerHTML = html;
+        return tmp.textContent || "";
+      },
+      selectCurrentRow(currentRow, oldCurrentRow) {
+        let that = this;
+        if(that.viewOrOperation !== 2){
+          ARTICLE_API.clickPlus({articleId: currentRow.articleId}).then(res => {
+            if(res.code === 0){
+              let params = {
+                content: currentRow.content,
+                isJump: '1',
+                path: '/article/personList',
+                pathName: '个人文章列表'
+              }
+              that.$router.push({path: '/article/view' , query: params});
+            }else{
+              that.$message.error({
+                showClose: true,
+                message: "操作失败",
+                duration: 2000
+              })
+            }
+          })
+        }
+      },
       handleCurrentChange(val) {
         this.page = val;
         this.search();
@@ -196,14 +224,25 @@
         };
 
         that.loading = true;
-        let roleId=2;
-        API.findTeacherList(params,roleId)
+        params.isSecret="3";
+        params.personal="1";
+        ARTICLE_API.findList(params)
           .then(
             function (result) {
               that.loading = false;
               if (result && result.page.rows) {
                 that.total = result.page.total;
-                that.users = result.page.rows;
+                for(let p in result.page.rows){//遍历json数组时，这么写p为索引，0,1
+                  let str=that.decode(result.page.rows[p].content);
+                  result.page.rows[p].content = that.strip(str);
+
+                }
+                that.articleRows = result.page.rows;
+                for(let p in that.articleRows){//遍历json数组时，这么写p为索引，0,1
+
+                  that.articleRows[p].resume = result.page.rows[p].content.substr(0,15)+'......';
+
+                }
               }
             },
             function (err) {
@@ -214,121 +253,31 @@
                 duration: 2000
               });
             }
-          )
-          .catch(function (error) {
-            that.loading = false;
-            console.log(error);
-            that.$message.error({
-              showClose: true,
-              message: "请求出现异常",
-              duration: 2000
-            });
-          });
+          );
       },
-      showAddDialog: function () {
+      toEditor: function (index, row) {
         let that = this;
-        this.addFormVisible = true;
-        that.roleIds = []
-        ROLE_API.findList('').then(function (result) {
-          that.roles = result.rows;
-        })
+        that.viewOrOperation=2;
+        let params = {
+          articleId: row.articleId,
+          title: row.title,
+          content: row.content,
+          tag: row.tag,
+          isSecret: row.isSecret,
+          saveOrUpdate: "2",
+          isJump: '1',
+          path: '/article/personList',
+          pathName: '个人文章列表'
+        };
+        that.$router.push({path: '/article/editor' , query: params});
       },
-      showEditDialog: function (index, row) {
+      removeArticle: function (index, row) {
         let that = this;
-        that.roleIds = []
-        this.editFormVisible = true;
-        this.editForm = Object.assign({}, row);
-        ROLE_API.findList('').then(function (result) {
-          that.roles = result.rows;
-        })
-        ROLE_API.findById(row.userId).then(function (result) {
-          that.roleIds = result;
-        })
-      },
-      addSubmit: function () {
-        let that = this;
-        this.$refs.addForm.validate(valid => {
-          if (valid) {
-            that.loading = true;
-            let params = Object.assign({}, this.addForm);
-            params.roleIds = that.roleIds
-            API.addUser(params).then(function (result) {
-              if (0 === result.code) {
-                that.loading = false;
-                that.$message;
-                that.$message.success({
-                  showClose: true,
-                  message: "新增成功",
-                  duration: 2000
-                });
-                that.$refs["addForm"].resetFields();
-                that.addFormVisible = false;
-                that.search();
-              } else {
-                that.$message.error({
-                  showClose: true,
-                  message: "修改失败",
-                  duration: 2000
-                });
-              }
-            });
-          }
-        });
-      },
-      editSubmit: function () {
-        let that = this;
-        this.$refs.editForm.validate(valid => {
-          if (valid) {
-            that.loading = true;
-            let params = Object.assign({}, that.editForm);
-            params.roleIds = that.roleIds
-            API.editUser(params).then(function (result) {
-              if (0 === result.code) {
-                // that.loading = false;
-                // that.$message;
-                that.$message.success({
-                  showClose: true,
-                  message: "修改成功",
-                  duration: 2000
-                });
-                that.$refs["editForm"].resetFields();
-                that.editFormVisible = false;
-                that.search();
-              } else {
-                that.$message.error({
-                  showClose: true,
-                  message: "修改失败",
-                  duration: 2000
-                });
-              }
-            },
-              function (err) {
-                that.loading = false;
-                that.$message.error({
-                  showClose: true,
-                  message: err.toString(),
-                  duration: 2000
-                });
-              }
-            )
-              .catch(function (error) {
-                that.loading = false;
-                console.log(error);
-                that.$message.error({
-                  showClose: true,
-                  message: "请求出现异常",
-                  duration: 2000
-                });
-              });
-          }
-        });
-      },
-      removeUser: function (index, row) {
-        let that = this;
+        that.viewOrOperation=2;
         this.$confirm("确认删除该记录吗?", "提示", {type: "warning"})
           .then(() => {
             that.loading = true;
-            API.removeUser({id: row.id})
+            ARTICLE_API.remove({articleId: row.articleId})
               .then(
                 function (result) {
                   that.loading = false;
@@ -338,6 +287,7 @@
                       message: "删除成功",
                       duration: 1500
                     });
+                    that.viewOrOperation=1;
                     that.search();
                   }
                 }
@@ -350,15 +300,15 @@
                   duration: 2000
                 });
               }
-              .catch(function (error) {
-                that.loading = false;
-                console.log(error);
-                that.$message.error({
-                  showClose: true,
-                  message: "请求出现异常",
-                  duration: 2000
+                .catch(function (error) {
+                  that.loading = false;
+                  console.log(error);
+                  that.$message.error({
+                    showClose: true,
+                    message: "请求出现异常",
+                    duration: 2000
+                  });
                 });
-              });
           })
           .catch(() => {
           });
