@@ -1,0 +1,49 @@
+/*自定义样式*/
+
+  /*尺寸常量*/
+  $header-height : 44px;
+  $padding : 15px;
+  $margin10 : 10px;
+  $authorImg : 40px;
+
+  $radius: 4px;
+  $font-title: 16px;
+  $font-content: 14px;
+  $font-info: 12px;
+  $font-tag: 10px;
+
+  /*颜色常量*/
+  $color42b : #42b983;
+  $colord4 : #d4d4d4;
+  $color31 : #313131;
+  $white: #ffffff;
+  $light: #d5dbdb;
+  $title: #2c3e50;
+  $text: #34495e;
+
+
+.line-bottom{
+  border-bottom: 1px solid $colord4;
+}
+
+.line-top{
+  border-top: 1px solid $colord4;
+}
+
+.single-row{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.author-img{
+  width: $authorImg;
+  height: $authorImg;
+  border-radius: 50%;
+}
+
+.button{
+  padding: 2px 5px;
+  border-radius: 5px;
+  background-color: $color42b;
+}

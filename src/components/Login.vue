@@ -63,6 +63,7 @@
                     //   JSON.stringify(result.user)
                     // );
                     localStorage.setItem("access-token", "bearer " + result.access_token);
+                    localStorage.setItem("currentUser", "bearer " + result.access_token);
                     console.log(result.router)
                     localStorage.setItem("menus", JSON.stringify(result.router));
                     localStorage.setItem("perms", JSON.stringify(result.perms));

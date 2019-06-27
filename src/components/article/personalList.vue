@@ -45,77 +45,12 @@
                        style="float:right;">
         </el-pagination>
       </el-col>
-      <!-- 添加界面 -->
-      <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
-        <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-          <el-form-item label="用户名" prop="username">
-            <el-input v-model="addForm.username" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="addForm.password" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="姓名" prop="name">
-            <el-input v-model="addForm.name" auto-complete="off"></el-input>
-          </el-form-item>
-          <!-- <el-form-item label="出生日期" prop="birth">
-             <el-date-picker type="date" placeholder="出生日期" v-model="addForm.birth"></el-date-picker>
-           </el-form-item>-->
-          <el-form-item label="邮箱" prop="email">
-            <el-input type="email" v-model="addForm.email"></el-input>
-          </el-form-item>
-          <el-form-item label="电话号码" prop="phone">
-            <el-input type="phone" v-model="editForm.phone"></el-input>
-          </el-form-item>
-          <el-form-item label="角色" prop="roleIds">
-            <el-checkbox-group v-model="roleIds">
-              <el-checkbox v-for="role in roles" :label="role.roleId" :key="role.roleId">{{role.roleName}}
-              </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click.native="addFormVisible = false">取消</el-button>
-          <el-button type="primary" @click.native="addSubmit" :loading="addLoading">提交</el-button>
-        </div>
-      </el-dialog>
-      <!-- 编辑界面 -->
-      <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
-        <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-          <el-form-item label="用户名" prop="username">
-            <el-input v-model="editForm.username" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="姓名" prop="name">
-            <el-input v-model="editForm.name" auto-complete="off"></el-input>
-          </el-form-item>
-          <!--<el-form-item label="出生日期" prop="birth">
-            <el-date-picker type="date" placeholder="出生日期" v-model="editForm.birth"></el-date-picker>
-          </el-form-item>-->
-          <el-form-item label="邮箱" prop="email">
-            <el-input type="email" v-model="editForm.email"></el-input>
-          </el-form-item>
-          <el-form-item label="电话号码" prop="phone">
-            <el-input type="phone" v-model="editForm.phone"></el-input>
-          </el-form-item>
-          <el-form-item label="角色" prop="roleIds">
-            <el-checkbox-group v-model="roleIds">
-              <el-checkbox v-for="role in roles" :label="role.roleId" :key="role.roleId">{{role.roleName}}
-              </el-checkbox>
-            </el-checkbox-group>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click.native="editFormVisible = false">取消</el-button>
-          <el-button type="primary" @click.native="editSubmit" :loading="addLoading">提交</el-button>
-        </div>
-      </el-dialog>
 
     </el-col>
   </el-row>
 </template>
 
 <script>
-  import API from "../../api/api_user";
-  import ROLE_API from "../../api/api_role";
   import ARTICLE_API from "../../api/api_article";
   import 'tinymce/plugins/code';
 
@@ -136,40 +71,6 @@
         page: 1,
         limit: 10,
         loading: false,
-        editFormVisible: false,
-        editFormRules: {
-          username: [
-            {required: true, message: "请输入用户名", trigger: "blur"}
-          ],
-          password: [{required: true, message: "请输入作者", trigger: "blur"}],
-          name: [{required: true, message: "请输入姓名", trigger: "blur"}]
-        },
-        editForm: {
-          username: "",
-          password: "",
-          name: "",
-          email: "",
-          phone: "",
-          roleIds: []
-        },
-        //新增相关数据
-        addFormVisible: false, //新增界面是否显示
-        addLoading: false,
-        addFormRules: {
-          username: [
-            {required: true, message: "请输入用户名", trigger: "blur"}
-          ],
-          password: [{required: true, message: "请输入作者", trigger: "blur"}],
-          name: [{required: true, message: "请输入姓名", trigger: "blur"}]
-        },
-        addForm: {
-          username: "",
-          password: "",
-          name: "",
-          email: "",
-          phone: "",
-          roleIds: []
-        }
       };
     },
     methods: {
@@ -190,6 +91,10 @@
             if(res.code === 0){
               let params = {
                 content: currentRow.content,
+                articleId: currentRow.articleId,
+                author: currentRow.createUser,
+                click: currentRow.click,
+                createTime: currentRow.createTime,
                 isJump: '1',
                 path: '/article/personList',
                 pathName: '个人文章列表'
@@ -234,13 +139,13 @@
                 that.total = result.page.total;
                 for(let p in result.page.rows){//遍历json数组时，这么写p为索引，0,1
                   let str=that.decode(result.page.rows[p].content);
-                  result.page.rows[p].content = that.strip(str);
+                  result.page.rows[p].content = str;
 
                 }
                 that.articleRows = result.page.rows;
                 for(let p in that.articleRows){//遍历json数组时，这么写p为索引，0,1
 
-                  that.articleRows[p].resume = result.page.rows[p].content.substr(0,15)+'......';
+                  that.articleRows[p].resume = that.strip(result.page.rows[p].content).substr(0,15)+'......';
 
                 }
               }

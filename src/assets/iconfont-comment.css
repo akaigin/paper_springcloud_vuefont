@@ -1,0 +1,25 @@
+@font-face {font-family: "iconfont";
+  src: url('iconfont-comment/iconfont.eot?t=1561630714127'); /* IE9 */
+  src: url('iconfont-comment/iconfont.eot?t=1561630714127#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAN4AAsAAAAAB6AAAAMpAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDBgqDBIJUATYCJAMMCwgABCAFhG0HORudBhHVm7nIfiTGtmi2znXxZlZFWzTeBAG99zab3ZemSevkQLCAz/wiHACLcx7YqAg1krMnj76QFMZZdjLgcvqjKJF5luU2x8THAOOAsnBPfErkuUAC8obpJQ3UxecQgEk+yiCaNGvTBQOFu04AYszI4QMxKk7UQKfAQKB3HFUVRQAuDG2ldgZYn3xfvKaSMEDDJXG3dhjWdAgNnnk86yoX/F9An4hAtZ0fYKdAAmUABaJfZ7AHMiuWQWIaoxpu1FEItK0y//8nSsusX/SPp4HQcds9ACgBSxo88whkEPCsKws0ACQAOuAGzAWCIN/mnkTl8hN5cnl6zjavX7N3JthXrtha7EnLM/26uH7djjtmCy8zJcLpGZma3UqPziaj0mwhZsdcqOKx6kqNLjvP5RMLs0xz96V8rvjL1X13Xcw7IzUzNrN49z3Xq3uu3pDbFZVl+qzKQC3ItLov3GA1p2QuyDA9VmWJEueqd7z5rvrXUTNOXAowzPlRqUk3Cv3JhqGF2uj17+Ta4Fe7XkVmrm8YIfLediJ9ZhecwIOcv3xm0LLAFPdhC6qVGuEMSGzav4Ah7QPO9oBh7huMYQHnAoYZlQptaJBlLKjeo9j4EU5AfmeDaqE2OOMcXNvCOWAHfbbD+AtnQ0katA/cwIKsUrMZAMD/o3KnbJmUQ1WwXPCLfsPDusVr9/eu89WwFAA3a+39BdXTwmDcQEjAD6lTwQCRxrKATUoruo3wlKQDKy/RABMT+A3dAH7cW252JreDwMApoOFGXkgMipCKXwYuLKpAx6A+TErT/LSFP5OQCOUOlGIpgMCHLdDw4ggkPpwlFf8uXGTjLXR8hIRJN+F/pUUxYYbDkVEJWtA/CKZryffIIe28oZtqxWVNInwhjyEDeZLVK1dskbfYMb5dIUJA3DVwAa9hXXfQcxfRSOJF+jJNqetNiema2YEjoxK0oH8QTNdSNFoOjc/f0E214gFGI/9CHsPkkCfZBPJqbCcxXoXN+HaFCAFx18AF+LH2ih303YsiGkn8gnxfpmgYTTUmx5ub5zsGmLhbpNCEFIrtkKDavz+w9lOgaTYDAAAA') format('woff2'),
+  url('iconfont-comment/iconfont.woff?t=1561630714127') format('woff'),
+  url('iconfont-comment/iconfont.ttf?t=1561630714127') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('iconfont-comment/iconfont.svg?t=1561630714127#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont-comment {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-like:before {
+  content: "\e60c";
+}
+
+.icon-comment:before {
+  content: "\e655";
+}
+

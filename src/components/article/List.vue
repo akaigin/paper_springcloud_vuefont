@@ -119,6 +119,10 @@
           if(res.code === 0){
             let params = {
               content: currentRow.content,
+              articleId: currentRow.articleId,
+              author: currentRow.author,
+              click: currentRow.click,
+              createTime: currentRow.createTime,
               isJump: '1',
               path: '/article/list',
               pathName: '文章列表'
@@ -162,13 +166,13 @@
                 that.total = result.page.total;
                 for(let p in result.page.rows){//遍历json数组时，这么写p为索引，0,1
                   let str=that.decode(result.page.rows[p].content);
-                  result.page.rows[p].content = that.strip(str);
+                  result.page.rows[p].content = str;
 
                 }
                 that.articleRows = result.page.rows;
                 for(let p in that.articleRows){//遍历json数组时，这么写p为索引，0,1
 
-                  that.articleRows[p].resume = result.page.rows[p].content.substr(0,15)+'......';
+                  that.articleRows[p].resume = that.strip(result.page.rows[p].content).substr(0,15)+'......';
 
                 }
               }

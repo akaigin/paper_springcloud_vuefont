@@ -159,12 +159,12 @@ let router = new Router({
     {
       path: '/',
       component: Home,
-      name: '富文本编辑器',
+      name: '文章创作',
       menuShow: true,
       leaf: true,
       iconCls: 'fa fa-group',
       children: [
-        {path: '/article/editor', component: Editor, name: '富文本编辑器', menuShow: true},
+        {path: '/article/editor', component: Editor, name: '文章创作', menuShow: true},
       ]
     },
     /*{

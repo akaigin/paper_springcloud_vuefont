@@ -43,3 +43,10 @@
 
 .icon-books2:before { content: "\e7b9"; }
 
+.icon-like:before {
+  content: "\e60c";
+}
+
+.icon-comment:before {
+  content: "\e655";
+}
