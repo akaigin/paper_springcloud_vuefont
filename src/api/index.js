@@ -7,7 +7,7 @@ import {
   bus
 } from '../bus.js'
 
-axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = false;
 // axios.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 //  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';//配置请求头
 

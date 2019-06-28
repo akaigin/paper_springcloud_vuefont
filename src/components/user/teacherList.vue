@@ -65,6 +65,9 @@
           <el-form-item label="姓名" prop="name">
             <el-input v-model="addForm.name" auto-complete="off"></el-input>
           </el-form-item>
+          <el-form-item label="性别" prop="sex">
+            <el-input v-model="addForm.sex" auto-complete="off"></el-input>
+          </el-form-item>
          <!-- <el-form-item label="出生日期" prop="birth">
             <el-date-picker type="date" placeholder="出生日期" v-model="addForm.birth"></el-date-picker>
           </el-form-item>-->
@@ -72,7 +75,7 @@
             <el-input type="email" v-model="addForm.email"></el-input>
           </el-form-item>
           <el-form-item label="电话号码" prop="phone">
-            <el-input type="phone" v-model="editForm.phone"></el-input>
+            <el-input type="phone" v-model="addForm.phone"></el-input>
           </el-form-item>
           <el-form-item label="角色" prop="roleIds">
             <el-checkbox-group v-model="roleIds">
@@ -94,6 +97,9 @@
           </el-form-item>
           <el-form-item label="姓名" prop="name">
             <el-input v-model="editForm.name" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="性别" prop="sex">
+            <el-input v-model="editForm.sex" auto-complete="off"></el-input>
           </el-form-item>
           <!--<el-form-item label="出生日期" prop="birth">
             <el-date-picker type="date" placeholder="出生日期" v-model="editForm.birth"></el-date-picker>
@@ -154,7 +160,8 @@
           name: "",
           email: "",
           phone: "",
-          roleIds: []
+          roleIds: [],
+          sex: ''
         },
         //新增相关数据
         addFormVisible: false, //新增界面是否显示
@@ -172,7 +179,8 @@
           name: "",
           email: "",
           phone: "",
-          roleIds: []
+          roleIds: [],
+          sex: '',
         }
       };
     },

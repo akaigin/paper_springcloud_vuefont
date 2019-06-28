@@ -26,7 +26,7 @@
         </el-table-column>
         <el-table-column prop="title" label="题目" width="400" sortable>
         </el-table-column>
-        <el-table-column prop="resume" label="简述" min-width="120" sortable>
+        <el-table-column prop="resume" label="简述" show-overflow-tooltip="true" min-width="120" sortable>
         </el-table-column>
         <el-table-column prop="createTime" label="创作时间" width="100"  sortable>
         </el-table-column>
@@ -34,7 +34,7 @@
         </el-table-column>
         <el-table-column label="操作" width="150">
           <template slot-scope="scope">
-            <el-button size="mini" @click="toEditor(scope.$index,scope.row)">编辑</el-button>
+            <el-button size="mini" @search="search" @click="toEditor(scope.$index,scope.row)">编辑</el-button>
             <el-button size="mini" type="danger" @click="removeArticle(scope.$index,scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -99,7 +99,7 @@
                 path: '/article/personList',
                 pathName: '个人文章列表'
               }
-              that.$router.push({path: '/article/view' , query: params});
+              that.$router.push({name: '阅读文章' , params: params});
             }else{
               that.$message.error({
                 showClose: true,
@@ -138,16 +138,21 @@
               if (result && result.page.rows) {
                 that.total = result.page.total;
                 for(let p in result.page.rows){//遍历json数组时，这么写p为索引，0,1
-                  let str=that.decode(result.page.rows[p].content);
-                  result.page.rows[p].content = str;
+                  if(result.page.rows[p].content !== null){
+                    let strToHtml=that.decode(result.page.rows[p].content);
+                    let strToString = that.strip(strToHtml);
+                    result.page.rows[p].content = strToHtml;
+                    result.page.rows[p].resume = strToString;
+                  }
 
                 }
                 that.articleRows = result.page.rows;
+                /*
                 for(let p in that.articleRows){//遍历json数组时，这么写p为索引，0,1
 
                   that.articleRows[p].resume = that.strip(result.page.rows[p].content).substr(0,15)+'......';
 
-                }
+                }*/
               }
             },
             function (err) {
@@ -226,5 +231,4 @@
 </script>
 
 <style scoped>
-
 </style>

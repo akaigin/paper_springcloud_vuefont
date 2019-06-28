@@ -9,6 +9,19 @@
       <span @click="addCommitOrReply('commit')">新增评论</span>
     </div>
     </article>-->
+    <div class="addreply">
+      <section class="commit-input">
+        <el-input v-model="replyComment"
+                  type="textarea"
+                  :rows="3"
+                  autofocus
+                  placeholder="写下你的评论">
+        </el-input>
+      </section>
+      <div class="btn-control">
+        <el-button type="success" size="mini" round @click="commitComment('commit')">新增评论</el-button>
+      </div>
+    </div>
     <h2>评论区</h2>
     <div class="comment" v-for="item in comments">
       <div class="info">
@@ -33,7 +46,8 @@
         <div class="item" v-for="reply in item.replies">
           <div class="reply-content">
             <span class="from-name">{{reply.author}}</span><span>: </span>
-            <span class="to-name">@{{reply.toWho}}</span>
+            <span class="to-name" v-if="reply.toWho === ''">{{reply.toWho}}</span>
+            <span class="to-name" v-else>@{{reply.toWho}}</span>
             <span>{{reply.content}}</span>
           </div>
           <div class="reply-bottom">
@@ -79,11 +93,13 @@
       comments: {
         type: Array,
         required: true
-      }
+      },
+      articleId: ''
     },
     components: {},
     data() {
       return {
+        replyComment: '',
         inputComment: '',
         showItemId: '',
         toWho: '',
@@ -125,16 +141,27 @@
       /**
        * 提交评论
        */
-      commitComment() {
+      commitComment(style) {
         let that= this;
-        let startIndex= that.inputComment.indexOf('@'+that.toWho) === -1? 0 : that.inputComment.indexOf('@'+that.toWho)+ that.toWho.length+1;
-        let content = that.inputComment.substring(startIndex);
-        let params={
-          author: that.nickname,
-          content: content,
-          parentId: that.parentId,
-          articleId: that.comments[0].articleId,
-          toWho: that.toWho
+        let params = {};
+        if(style === 'commit'){
+          params={
+            author: that.nickname,
+            content: that.replyComment,
+            parentId: 0,
+            articleId: that.articleId,
+            toWho: that.nickname
+          }
+        }else{
+          let startIndex= that.inputComment.indexOf('@'+that.toWho) === -1? 0 : that.inputComment.indexOf('@'+that.toWho)+ that.toWho.length+1;
+          let content = that.inputComment.substring(startIndex);
+          params={
+            author: that.nickname,
+            content: content,
+            parentId: that.parentId,
+            articleId: that.articleId,
+            toWho: that.toWho
+          }
         }
         COMMENT_API.save(params).then(res => {
           if(res.code === 0){
@@ -168,7 +195,7 @@
           that.toWho= reply.author
         } else {
           that.inputComment = ''
-          that.toWho= item.author
+          that.toWho= ''
         }
         that.showItemId = item.commentId
       }
@@ -187,6 +214,7 @@
 
   @import "../../assets/css/scss";
   @import '../../assets/iconfont-comment.css';
+  .fr{float:right;}
   .container {
     padding: 0 10px;
     box-sizing: border-box;
