@@ -180,8 +180,8 @@
       )
       API.tokenUser()
         .then(function (result) {
-          that.nickname = result.name;
           localStorage.setItem("access-user", JSON.stringify(result));
+          bus.$emit('setNickName', result.name);
         })
         .catch(() => {
           localStorage.removeItem("access-token");

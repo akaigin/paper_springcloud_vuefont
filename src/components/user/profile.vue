@@ -10,17 +10,20 @@
 
     <el-col :span="24" class="warp-main">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="账号">
+        <el-form-item label="学号">
           <el-input v-model="form.useranme" disabled></el-input>
-        </el-form-item>
-        <el-form-item prop="nickname" label="昵称">
-          <el-input v-model="form.nickname"></el-input>
         </el-form-item>
         <el-form-item prop="name" label="姓名">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item prop="email" label="邮箱">
           <el-input v-model="form.email"></el-input>
+        </el-form-item>
+        <el-form-item prop="email" label="手机号">
+          <el-input v-model="form.phone"></el-input>
+        </el-form-item>
+        <el-form-item prop="email" label="性别">
+          <el-input v-model="form.sex"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleSaveProfile">修改并保存</el-button>
@@ -40,13 +43,14 @@
         loading: false,
         form: {
           useranme: '',
-          nickname: '',
           name: '',
-          email: ''
+          email: '',
+          phone: '',
+          sex: ''
         },
         rules: {
-          nickname: [
-            {required: true, message: '请输入昵称', trigger: 'blur'}
+          name: [
+            {required: true, message: '请输入真实姓名', trigger: 'blur'}
           ],
           email: [
             {required: true, message: '请输入邮箱', trigger: 'blur'},
@@ -61,21 +65,19 @@
         that.$refs.form.validate((valid) => {
           if (valid) {
             that.loading = true;
-            let args = {
-              nickname: that.form.nickname,
-              name: that.form.name,
-              email: that.form.email
-            };
-            API.changeProfile(args).then(function (result) {
+            let params = Object.assign({}, that.form);
+            API.editUser(params).then(function (result) {
               that.loading = false;
-              if (result && parseInt(result.errcode) === 0) {
+              if (result && result.code === 0) {
                 //修改成功
                 let user = JSON.parse(window.localStorage.getItem('access-user'));
-                user.nickname = that.form.nickname;
+                user.username = that.form.username;
                 user.name = that.form.name;
                 user.email = that.form.email;
+                user.email = that.form.phone;
+                user.email = that.form.sex;
                 localStorage.setItem('access-user', JSON.stringify(user));
-                bus.$emit('setNickName', that.form.nickname);
+                bus.$emit('setNickName', that.form.name);
                 that.$message.success({showClose: true, message: '修改成功', duration: 2000});
               } else {
                 that.$message.error({showClose: true, message: result.msg, duration: 2000});
@@ -93,13 +95,15 @@
       }
     },
     mounted() {
+      let that = this;
       let user = localStorage.getItem('access-user');
       if (user) {
         user = JSON.parse(user);
-        this.form.useranme = user.username;
-        this.form.nickname = user.nickname || '';
-        this.form.email = user.email || '';
-        this.form.name = user.name || '';
+        that.form.useranme = user.username;
+        that.form.email = user.email || '';
+        that.form.name = user.name || '';
+        that.form.phone = user.phone || '';
+        that.form.sex = user.sex || '';
       }
     }
   }

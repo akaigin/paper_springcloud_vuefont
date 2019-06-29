@@ -120,14 +120,14 @@
             let params = {
               content: currentRow.content,
               articleId: currentRow.articleId,
-              author: currentRow.author,
+              author: currentRow.createUser,
               click: currentRow.click,
               createTime: currentRow.createTime,
               isJump: '1',
               path: '/article/list',
               pathName: '文章列表'
             }
-            that.$router.push({path: '/article/view' , query: params});
+            that.$router.push({name: '阅读文章' , params: params});
           }else{
             that.$message.error({
               showClose: true,

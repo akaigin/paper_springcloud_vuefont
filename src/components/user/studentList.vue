@@ -149,7 +149,11 @@
             {required: true, message: "请输入用户名", trigger: "blur"}
           ],
           password: [{required: true, message: "请输入作者", trigger: "blur"}],
-          name: [{required: true, message: "请输入姓名", trigger: "blur"}]
+          name: [{required: true, message: "请输入姓名", trigger: "blur"}],
+          email: [
+            {required: true, message: '请输入邮箱', trigger: 'blur'},
+            {type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change'}
+          ]
         },
         editForm: {
           username: "",
@@ -168,7 +172,11 @@
             {required: true, message: "请输入用户名", trigger: "blur"}
           ],
           password: [{required: true, message: "请输入作者", trigger: "blur"}],
-          name: [{required: true, message: "请输入姓名", trigger: "blur"}]
+          name: [{required: true, message: "请输入姓名", trigger: "blur"}],
+          email: [
+            {required: true, message: '请输入邮箱', trigger: 'blur'},
+            {type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change'}
+          ]
         },
         addForm: {
           username: "",

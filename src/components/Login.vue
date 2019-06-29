@@ -84,7 +84,7 @@
                   that.loading = false;
                   that.$message.error({
                     showClose: true,
-                    message: err.toString(),
+                    message: "用户名或密码错误，请重新输入！",
                     duration: 2000
                   });
                 }

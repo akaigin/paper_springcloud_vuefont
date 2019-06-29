@@ -16,11 +16,6 @@ export default {
   tokenUser: params =>{
     return API.GET('/api-admin/user/currentUser',params)
   },
-  //修改个人信息
-  changeProfile: params => {
-    return API.PATCH('/api/v1/users/profile', params)
-  },
-
   //查询获取user列表(通过page分页)
   findList: params => {
     return API.GET('/api-admin/user', params)
@@ -47,4 +42,8 @@ export default {
   router: params =>{
     return API.GET('/api-admin/router',params)
   },
+
+  changePwd: params =>{
+    return API.PUT('/api-admin/user/changePwd',params)
+  }
 }
