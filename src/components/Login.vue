@@ -64,6 +64,7 @@
                     // );
                     localStorage.setItem("access-token", "bearer " + result.access_token);
                     localStorage.setItem("currentUser", "bearer " + result.access_token);
+                    localStorage.setItem("currentPwd", that.account.pwd);
                     console.log(result.router)
                     localStorage.setItem("menus", JSON.stringify(result.router));
                     localStorage.setItem("perms", JSON.stringify(result.perms));

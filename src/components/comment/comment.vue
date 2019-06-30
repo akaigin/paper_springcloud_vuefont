@@ -206,6 +206,10 @@
       bus.$on("setNickName", text => {
         this.nickname = text;
       });
+    },
+    beforeDestroy() {
+      let that= this;
+
     }
   }
 </script>
