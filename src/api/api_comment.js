@@ -13,4 +13,8 @@ export default {
   save:params =>{
     return API.POST('/api-admin/comment',params)
   },
+  updateLikeNum:params =>{
+    return API.PUT('/api-admin/comment/updateLikeNum',params)
+  },
+
 }

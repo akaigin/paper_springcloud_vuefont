@@ -209,7 +209,24 @@
     },
     beforeDestroy() {
       let that= this;
-
+      let userCommentDTOS=[];
+      for(let i in that.comments){
+        let param={
+          commentId: that.comments[i].commentId,
+          isLike: that.comments[i].isLike
+        }
+        userCommentDTOS.push(param)
+      }
+      COMMENT_API.updateLikeNum(userCommentDTOS).then(res => {
+        if(res.code === 0){
+        }else {
+          that.$message.error({
+            showClose: true,
+            message: "点赞失败",
+            duration: 2000
+          })
+        }
+      })
     }
   }
 </script>
