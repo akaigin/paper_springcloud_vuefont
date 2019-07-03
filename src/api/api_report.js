@@ -5,9 +5,13 @@
 import * as API from './'
 
 export default {
-  //查询获取report列表(通过page分页)
+  //查询获取个人report列表(通过page分页)
   findList: params => {
     return API.GET('/api-admin/report/list', params)
+  },
+  //查询获取审核report列表(通过page分页)
+  findCheckList: params => {
+    return API.GET('/api-admin/report/listCheck', params)
   },
   //增加report
   save:params =>{

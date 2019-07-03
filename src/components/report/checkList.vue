@@ -126,7 +126,7 @@
           name: that.filters.name
         }
         this.page = val
-        REPORT_API.findList(params).then(res => {
+        REPORT_API.findCheckList(params).then(res => {
           if (res.code === 0) {
             that.fileRows = res.page.rows
             that.total = res.page.total

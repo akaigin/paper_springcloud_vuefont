@@ -12,7 +12,7 @@
       <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
         <el-form :inline="true" :model="filters">
           <el-form-item>
-            <el-input v-model="filters.name" placeholder="用户名/姓名/昵称" style="min-width: 240px;"></el-input>
+            <el-input v-model="filters.name" placeholder="题目/标签/创作时间/作者" style="min-width: 240px;"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="handleSearch">查询</el-button>
