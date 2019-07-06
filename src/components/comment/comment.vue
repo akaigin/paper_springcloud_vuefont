@@ -200,6 +200,9 @@
         that.showItemId = item.commentId
       }
     },
+    beforeunloadHandler(e) {
+
+    },
     created() {
       let that= this;
       console.log(that.comments)
@@ -207,7 +210,10 @@
         this.nickname = text;
       });
     },
-    beforeDestroy() {
+    mounted() {
+    },
+    destroyed() {
+      window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e))
       let that= this;
       let userCommentDTOS=[];
       for(let i in that.comments){

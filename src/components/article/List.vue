@@ -127,7 +127,8 @@
               path: '/article/list',
               pathName: '文章列表'
             }
-            that.$router.push({name: '阅读文章' , params: params});
+            localStorage.setItem("detailsForView", JSON.stringify(params));
+            that.$router.push({name: '阅读文章'});
           }else{
             that.$message.error({
               showClose: true,

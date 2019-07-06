@@ -37,7 +37,7 @@
 </template>
 
 <script>
-  import Vue from 'vue'
+  import {bus} from '../../bus.js'
   import comment from '../../components/comment/comment'
   import COMMENT_API from '../../api/api_comment'
   export default {
@@ -56,13 +56,16 @@
     },
     mounted() {
       let that = this;
-      that.detail=that.$route.params;
+      that.detail=JSON.parse(localStorage.getItem("detailsForView"));
       that.search();
+    },
+    destroyed() {
+      localStorage.removeItem("detailsForView")
     },
     methods:{
       search() {
         let that = this;
-        COMMENT_API.findList({articleId: that.$route.params.articleId})
+        COMMENT_API.findList({articleId: that.detail.articleId})
           .then(
             function (result) {
               console.log("result为："+result)

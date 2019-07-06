@@ -53,6 +53,7 @@
 <script>
   import ARTICLE_API from "../../api/api_article";
   import 'tinymce/plugins/code';
+  import {bus} from '../../bus.js'
 
   export default {
     data() {
@@ -99,7 +100,8 @@
                 path: '/article/personList',
                 pathName: '个人文章列表'
               }
-              that.$router.push({name: '阅读文章' , params: params});
+              localStorage.setItem("detailsForView", JSON.stringify(params));
+              that.$router.push({name: '阅读文章'});
             }else{
               that.$message.error({
                 showClose: true,
@@ -179,7 +181,8 @@
           path: '/article/personList',
           pathName: '个人文章列表'
         };
-        that.$router.push({path: '/article/editor' , query: params});
+        localStorage.setItem("detailsForEdit", JSON.stringify(params));
+        that.$router.push({path: '/article/editor'});
       },
       removeArticle: function (index, row) {
         let that = this;
