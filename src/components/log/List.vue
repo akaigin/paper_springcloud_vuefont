@@ -11,7 +11,7 @@
         <el-table-column label="用户" prop="username"></el-table-column>
         <el-table-column label="操作" prop="operation"></el-table-column>
         <el-table-column label="用时" prop="time"></el-table-column>
-        <el-table-column label="操作时间" prop="gmtCreate"></el-table-column>
+        <el-table-column label="操作时间" prop="createTime"></el-table-column>
         <el-table-column label="方法" prop="method"></el-table-column>
         <el-table-column label="ip" prop="ip"></el-table-column>
         <el-table-column label="操作">
